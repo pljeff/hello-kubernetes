@@ -13,7 +13,7 @@ The default "Hello world!" message displayed can be overridden using the `MESSAG
 
 It is available on DockerHub as:
 
-- [paulbouwer/hello-kubernetes:1.8](https://hub.docker.com/r/paulbouwer/hello-kubernetes/)
+- [pljeff/hello-kubernetes:1.0](https://hub.docker.com/r/pljeff/hello-kubernetes/)
 
 ## Deploy
 
@@ -21,97 +21,8 @@ It is available on DockerHub as:
 
 Deploy to your Kubernetes cluster using the hello-kubernetes.yaml, which contains definitions for the service and deployment objects:
 
-```yaml
-# hello-kubernetes.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: hello-kubernetes
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 8080
-  selector:
-    app: hello-kubernetes
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: hello-kubernetes
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: hello-kubernetes
-  template:
-    metadata:
-      labels:
-        app: hello-kubernetes
-    spec:
-      containers:
-      - name: hello-kubernetes
-        image: paulbouwer/hello-kubernetes:1.8
-        ports:
-        - containerPort: 8080
-```
-
 ```bash
-$ kubectl apply -f yaml/hello-kubernetes.yaml
-```
-
-This will display a **Hello world!** message when you hit the service endpoint in a browser. You can get the service endpoint ip address by executing the following command and grabbing the returned external ip address value:
-
-```bash
-$ kubectl get service hello-kubernetes
-```
-
-### Customise Message
-
-You can customise the message displayed by the `hello-kubernetes` container. Deploy using the hello-kubernetes.custom-message.yaml, which contains definitions for the service and deployment objects.
-
-In the definition for the deployment, add an `env` variable with the name of `MESSAGE`. The value you provide will be displayed as the custom message.
-
-```yaml
-# hello-kubernetes.custom-message.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: hello-kubernetes-custom
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 8080
-  selector:
-    app: hello-kubernetes-custom
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: hello-kubernetes-custom
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: hello-kubernetes-custom
-  template:
-    metadata:
-      labels:
-        app: hello-kubernetes-custom
-    spec:
-      containers:
-      - name: hello-kubernetes
-        image: paulbouwer/hello-kubernetes:1.8
-        ports:
-        - containerPort: 8080
-        env:
-        - name: MESSAGE
-          value: I just deployed this on Kubernetes!
-```
-
-```bash
-$ kubectl apply -f yaml/hello-kubernetes.custom-message.yaml
+$ kubectl apply -f hello-kubernetes.yaml
 ```
 
 ### Specify Custom Port
